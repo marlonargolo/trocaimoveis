@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'imoveis',
     'App',
+    'channels',
+    'chat'
 ]
 
 MIDDLEWARE = [
@@ -76,6 +78,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'troca_imoveis.wsgi.application'
 
+ASGI_APPLICATION = 'troca_imoveis.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

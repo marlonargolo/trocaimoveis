@@ -60,14 +60,39 @@
                         <p>Valor: R$ {{ imovel.caracteristicas.valor|floatformat:2 }}</p>
                     </div>
                     <div class="property-footer">
-                        <button class="btn btn-success">👍</button>
-                        <button class="btn btn-danger">👎</button>
+                        <button class="btn btn-success btn-like" data-id="{{ imovel.id }}">👍</button>
+                        <button class="btn btn-danger btn-dislike" data-id="{{ imovel.id }}">👎</button>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.btn-like').click(function () {
+            const imovelId = $(this).data('id');
+            $.get(`/curtir/${imovelId}/`, function (response) {
+                if (response.success) {
+                    alert('Imóvel curtido!');
+                }
+            });
+        });
+
+        $('.btn-dislike').click(function () {
+            const imovelId = $(this).data('id');
+            $.get(`/descartar/${imovelId}/`, function (response) {
+                if (response.success) {
+                    alert('Imóvel descartado!');
+                }
+            });
+        });
+    });
+</script>
+
+
 </body>
 </html>
 {% endblock %}
