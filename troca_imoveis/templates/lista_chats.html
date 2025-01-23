@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<title>Seus Chats</title>
+<div class="container mt-4">
+    <h2>Seus Chats</h2>
+    <ul class="list-group">
+        {% for chat in chats %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Imóvel:</strong> {{ chat.imovel.cidade }} - {{ chat.imovel.estado }}<br>
+                <strong>Proprietário:</strong> {{ chat.owner.username }}
+            </div>
+            <a href="{% url 'chat_room' chat.id %}" class="btn btn-primary">Entrar no Chat</a>
+        </li>
+        {% empty %}
+        <li class="list-group-item">Você ainda não iniciou nenhum chat.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

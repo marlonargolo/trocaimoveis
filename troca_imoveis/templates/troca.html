@@ -33,6 +33,7 @@
                 <h5>{{ interacao.imovel.cidade }} - {{ interacao.imovel.estado }}</h5>
                 <p>{{ interacao.imovel.tipo_imovel }}</p>
                 <p>Valor: R$ {{ interacao.imovel.caracteristicas.valor|floatformat:2 }}</p>
+                <a href="{% url 'iniciar_chat' imovel.id %}" class="btn btn-primary mt-2">Conversar com responsável</a>
             </div>
         </div>
         {% endfor %}
