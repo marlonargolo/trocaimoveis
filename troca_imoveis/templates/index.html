@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .background {
+            position: absolute;
+            width: 60%;
+            height: 100%;
+            background: #FFD900;
+            border-radius: 50%;
+            top: -50%;
+            left: -80%;
+            z-index: 1;
+            width: 686.807px;
+            height: 1185.222px;
+            transform: rotate(28.077deg);
+            flex-shrink: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: black;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            position: absolute;
+            bottom: 10%;
+            left: 5%;
+            transform: translate(-5%, 90%);
+            transition: all 2s ease;
+            white-space: nowrap; /* Evita quebra de linha */
+        }
+
+        .content.active .title {
+            bottom: 80%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+        }
+
+        .buttons {
+            position: absolute;
+            bottom: 15px;
+            right: 10%;
+            text-align: right;
+        }
+
+        .buttons a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="content">
+        <div class="title">Troca fácil</div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            document.querySelector('.content').classList.add('active');
+        };
+    </script>
+    <div class="buttons">
+        <a href="{% url 'socialaccount_signup' %}">LOGIN</a>
+    </div>
+</body>
+</html>

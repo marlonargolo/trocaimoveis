@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Troca Fácil{% endblock %}</title>
+    <style>
+        /* Estilo geral */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Fundo preto */
+            color: #fff;
+        }
+
+        /* Cabeçalho */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #FFD700; /* Amarelo brilhante */
+            color: black;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 20px;
+            z-index: 3;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .topo {
+            margin-top: 80px;
+        }
+        .menu-toggle {
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        /* Menu lateral */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #FFD700;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: left 0.3s ease;
+            z-index: 2;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            margin: 20px 0;
+        }
+
+        .sidebar ul li a {
+            color: black;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        /* Sobreposição (overlay) */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Conteúdo dinâmico */
+        main {
+            margin-top: 60px; /* Espaço para o cabeçalho */
+            padding: 20px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px;
+            }
+
+            .menu-toggle {
+                font-size: 20px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+
+            .sidebar {
+                width: 200px; /* Reduz largura para telas menores */
+            }
+
+            .sidebar ul li a {
+                font-size: 16px; /* Texto menor para o menu */
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 8px;
+            }
+
+            .menu-toggle {
+                font-size: 18px;
+            }
+
+            h1 {
+                font-size: 16px;
+            }
+
+            .sidebar {
+                width: 180px; /* Mais estreito para dispositivos pequenos */
+            }
+
+            .sidebar ul li a {
+                font-size: 14px; /* Texto menor */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Cabeçalho -->
+    <header>
+        <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+        <h1>Troca Fácil</h1>
+    </header>
+
+    <!-- Menu lateral -->
+    <nav class="sidebar" id="sidebar">
+    <div class="topo">
+        <div class="menu-toggle" id="menu-close">&larr;</div>
+        <ul>
+            <li><a href="{% url 'lista_imoveis' %}">Inicio</a></li>
+            <li><a href="{% url 'cadastro' %}">Perfil</a></li>
+            <li><a href="{% url 'create_imovel' %}">Cadastrar imóvel</a></li>
+            <li><a href="{% url 'adicionar_documentacao' %}">Meus documentos</a></li>
+            <li><a href="{% url 'account_logout' %}">Sair</a></li>
+        </ul>
+    </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <main>
+        {% block content %}
+        <!-- Conteúdo dinâmico será inserido aqui -->
+        {% endblock %}
+    </main>
+
+    <script>
+        // Seleção de elementos
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        // Abrir o menu
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        });
+
+        // Fechar o menu
+        menuClose.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        // Fechar o menu ao clicar fora
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

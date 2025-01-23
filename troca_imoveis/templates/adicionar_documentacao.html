@@ -1,0 +1,166 @@
+{% extends "base_cabecalho.html" %}
+{% load i18n %}
+{% load static %}
+{% block head_title %}
+{% endblock head_title %}
+{% block content %}
+    <style>
+        /* CSS para Adicionar Documentação */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+form h3 {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #555;
+}
+
+form p {
+    font-size: 0.9em;
+    color: #333;
+}
+
+input[type="text"], input[type="file"], textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, input[type="file"]:focus, textarea:focus, select:focus {
+    border-color: #007bff;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+p {
+    color: #6c757d;
+}
+
+/* Estilo para as mensagens de sucesso e erro */
+.messages {
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.messages.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.messages.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Estilo para as imagens exibidas */
+img {
+    max-width: 200px;
+    height: auto;
+    margin: 10px 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    button {
+        font-size: 0.9em;
+    }
+}
+
+    </style>
+    <title>Adicionar Documentação</title>
+</head>
+<body>
+    <h2>Adicionar Documentação</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Salvar Documentação</button>
+    </form>
+
+    {% if documentacao_existente %}
+        <h3>Documentação Atual</h3>
+        <p><strong>Cliente:</strong> {{ documentacao_existente.cliente }}</p>
+        <p><strong>Imóvel:</strong> {{ documentacao_existente.imovel }}</p>
+        <p><strong>Escritura:</strong> {{ documentacao_existente.escritura }}</p>
+        <p><strong>Troca por Imóvel Menor:</strong> {{ documentacao_existente.troca_menor }}</p>
+        <p><strong>Troca por Imóvel Maior:</strong> {{ documentacao_existente.troca_maior }}</p>
+        <p><strong>Possui Dívida:</strong> {{ documentacao_existente.divida }}</p>
+        <p><strong>Detalhes:</strong> {{ documentacao_existente.detalhes }}</p>
+        <p><strong>RG:</strong> <img src="{{ documentacao_existente.rg_img.url }}" alt="RG" width="200"></p>
+        <p><strong>CPF:</strong> <img src="{{ documentacao_existente.cpf_img.url }}" alt="CPF" width="200"></p>
+        <p><strong>Comprovante de Residência:</strong> <img src="{{ documentacao_existente.comprovante_residencia.url }}" alt="Comprovante de Residência" width="200"></p>
+        <p><strong>Foto de Rosto:</strong> <img src="{{ documentacao_existente.rosto.url }}" alt="Foto de Rosto" width="200"></p>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block head_title %}
+{% endblock head_title %}
+{% block content %}
+<title>Imóveis</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #fdda00;
+            padding: 10px;
+        }
+        .navbar a {
+            color: black;
+            text-decoration: none;
+        }
+        .property-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .property-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        .property-details {
+            padding: 15px;
+        }
+        .property-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="container mt-4">
+        <div class="row">
+            {% for imovel in imoveis %}
+            <div class="col-md-4">
+                <div class="property-card">
+                    <div 
+                        class="property-image" 
+                        style="background-image: url({{ imovel.imagens_set.first.imagem.url }});">
+                    </div>
+                    <div class="property-details">
+                        <h5>{{ imovel.cidade }} - {{ imovel.estado }}</h5>
+                        <p>{{ imovel.tipo_imovel }}</p>
+                        <p>{{ imovel.relacao }}</p>
+                        <p>Valor: R$ {{ imovel.caracteristicas.valor|floatformat:2 }}</p>
+                    </div>
+                    <div class="property-footer">
+                        <button class="btn btn-success">👍</button>
+                        <button class="btn btn-danger">👎</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

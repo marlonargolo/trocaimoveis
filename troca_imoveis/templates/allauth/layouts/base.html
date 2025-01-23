@@ -1,0 +1,204 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% block head_title %}
+            {% endblock head_title %}
+        </title>
+        {% block extra_head %}
+        {% endblock extra_head %}
+    </head>
+    <body>
+        {% block body %}
+            {% if messages %}
+                <div>
+                    <strong>{% trans "Messages:" %}</strong>
+                    <ul>
+                        {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div>
+                <strong>{% trans "Menu:" %}</strong>
+                <ul>
+                    {% if user.is_authenticated %}
+                        {% url 'account_email' as email_url_ %}
+                        {% if email_url_ %}
+                            <li>
+                                <a href="{{ email_url_ }}">{% trans "Change Email" %}</a>
+                            </li>
+                        {% endif %}
+                        {% url 'account_change_password' as change_password_url_ %}
+                        {% if change_password_url_ %}
+                            <li>
+                                <a href="{{ change_password_url_ }}">{% trans "Change Password" %}</a>
+                            </li>
+                        {% endif %}
+                        {% url 'socialaccount_connections' as connections_url_ %}
+                        {% if connections_url_ %}
+                            <li>
+                                <a href="{{ connections_url_ }}">{% trans "Account Connections" %}</a>
+                            </li>
+                        {% endif %}
+                        {% url 'mfa_index' as mfa_url_ %}
+                        {% if mfa_url_ %}
+                            <li>
+                                <a href="{{ mfa_url_ }}">{% trans "Two-Factor Authentication" %}</a>
+                            </li>
+                        {% endif %}
+                        {% url 'usersessions_list' as usersessions_list_url_ %}
+                        {% if usersessions_list_url_ %}
+                            <li>
+                                <a href="{{ usersessions_list_url_ }}">{% trans "Sessions" %}</a>
+                            </li>
+                        {% endif %}
+                        {% url 'account_logout' as logout_url_ %}
+                        {% if logout_url_ %}
+                            <li>
+                                <a href="{{ logout_url_ }}">{% trans "Sign Out" %}</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        {% url 'account_login' as login_url_ %}
+                        {% if login_url_ %}
+                            <li>
+                                <a href="{{ login_url_ }}">{% trans "Sign In" %}</a>
+                            </li>
+                        {% endif %}
+                        {% url 'account_signup' as signup_url_ %}
+                        {% if signup_url_ %}
+                            <li>
+                                <a href="{{ signup_url_ }}">{% trans "Sign Up" %}</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </div>
+            {% block content %}
+            {% endblock content %}
+        {% endblock body %}
+        {% block extra_body %}
+        {% endblock extra_body %}
+    </body>
+</html>
+<style>
+    /* Define estilos gerais para o corpo */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    /* Estilo para o cabeçalho */
+    header {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    /* Estilo para as mensagens */
+    div strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        color: #007bff;
+    }
+    
+    div ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    div ul li {
+        background: #e7f3ff;
+        border: 1px solid #007bff;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+    }
+    
+    /* Estilo do menu */
+    div ul.menu {
+        list-style-type: none;
+        padding: 0;
+        margin: 20px 0;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    
+    div ul.menu li {
+        padding: 10px 20px;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    div ul.menu li:last-child {
+        border-bottom: none;
+    }
+    
+    div ul.menu li a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+    }
+    
+    div ul.menu li a:hover {
+        color: #0056b3;
+    }
+    
+    /* Estilo dos blocos de conteúdo */
+    div {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+    }
+    
+    /* Estilo para links */
+    a {
+        text-decoration: none;
+        color: #007bff;
+    }
+    
+    a:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }
+    
+    /* Estilo para o conteúdo principal */
+    main {
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+    
+        div {
+            padding: 15px;
+        }
+    
+        header {
+            font-size: 1.2rem;
+            padding: 10px;
+        }
+    }
+    
+
+</style>
