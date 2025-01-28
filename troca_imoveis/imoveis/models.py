@@ -60,7 +60,7 @@ class Imovel(models.Model):
     banheiros = models.IntegerField(null=True)
     garagem = models.IntegerField(null=True)
     ano_construcao = models.IntegerField(null=True)
-    propietario = models.CharField(max_length=4, blank=False, null=True)
+    proprietario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="imoveis", null=True, blank=True)
     relacao = models.CharField(max_length=80, null=True)
 
 def __str__(self):
@@ -95,7 +95,6 @@ def __str__(self):
 
 class caracteristicas(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cliente = models.ForeignKey(CadastroCliente, on_delete=models.CASCADE)
     imovel = models.OneToOneField(Imovel, on_delete=models.CASCADE)
     piscina = models.BooleanField(default=False, blank=False, null=False)
     churrasqueira = models.BooleanField(default=False, blank=False, null=False)

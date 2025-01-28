@@ -7,13 +7,18 @@ def lista_imoveis(request):
     imoveis = Imovel.objects.all()
     return render(request, 'lista_imoveis.html', {'imoveis': imoveis})
 
+from django.shortcuts import get_object_or_404, redirect
+from .models import InteracaoImovel
+from imoveis.models import Imovel
+
 def curtir_imovel(request, imovel_id):
-    imovel = get_object_or_404(Imovel, id=imovel_id)
-    interacao, created = InteracaoImovel.objects.get_or_create(user=request.user, imovel=imovel)
-    interacao.curtido = True
-    interacao.descartado = False
-    interacao.save()
-    return JsonResponse({'success': True})
+    if request.method == 'POST':
+        imovel = get_object_or_404(Imovel, id=imovel_id)
+        interacao, created = InteracaoImovel.objects.get_or_create(user=request.user, imovel=imovel)
+        interacao.curtido = True
+        interacao.descartado = False
+        interacao.save()
+        return redirect('lista_imoveis')  # Redireciona de volta para a lista de imóveis
 
 def descartar_imovel(request, imovel_id):
     imovel = get_object_or_404(Imovel, id=imovel_id)

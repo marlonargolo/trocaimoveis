@@ -108,9 +108,10 @@ def create_imovel(request):
             imovel.save()
 
             caracteristicas = caracteristicas_form.save(commit=False)
-            caracteristicas.user = request.user
+            caracteristicas.user = request.user  # Certifique-se de que o campo no modelo seja `user`
             caracteristicas.imovel = imovel
             caracteristicas.save()
+
 
             for form in imagens_formset:
                 if form.cleaned_data:  # Verifica se há dados válidos no formulário
@@ -120,7 +121,7 @@ def create_imovel(request):
                     caracteristicas.imagens.add(imagem)
 
             messages.success(request, 'Imóvel cadastrado com sucesso!')
-            return redirect('list_imoveis')  # Redirecionar para uma lista de imóveis
+            return render (request, 'lista_imoveis.html') # Redirecionar para uma lista de imóveis
 
     else:
         imovel_form = ImovelForm()

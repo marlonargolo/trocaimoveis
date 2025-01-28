@@ -1,8 +1,8 @@
 {% extends "account/base_entrance.html" %}
-{% load i18n %}
+{% load allauth i18n %}
 {% load static %}
 {% block head_title %}
-    {% trans "Sign Up" %}
+    {% trans "Signup" %}
 {% endblock head_title %}
 {% block content %}
     <div class="header">Troca Fácil</div>
@@ -10,52 +10,50 @@
     <div class="signup-container">
         <h2 class="signup-title">{% trans "Cadastre-se" %}</h2>
 
-        <form method="POST" action="{% url 'account_signup' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <input type="email" class="form-input" name="email" placeholder="{% trans 'Email' %}" required>
-                <span class="form-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z" />
-                    </svg>
-                </span>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-input" name="name" placeholder="{% trans 'Nome' %}" required>
-                <span class="form-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z" />
-                    </svg>
-                </span>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-input" name="password" placeholder="{% trans 'Senha' %}" required>
-                <span class="form-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z" />
-                    </svg>
-                </span>
-            </div>
-            <div class="form-checkbox">
-                <input type="checkbox" name="terms" id="terms" required>
-                <label for="terms">{% trans 'Li e concordo com os termos de serviços' %}</label>
-            </div>
-            <button type="submit" class="form-button">{% trans "login" %}</button>
-        </form>
+        {% if not SOCIALACCOUNT_ONLY %}
+            {% url 'account_signup' as action_url %}
+            <form method="POST" action="{{ action_url }}">
+                {% csrf_token %}
+                {{ redirect_field }}
 
-        <div class="social-login">
-            <button class="social-button">
-                <img src="{% static 'icons/facebook.svg' %}" alt="Facebook">
-            </button>
-            <button class="social-button">
-                <img src="{% static 'icons/google.svg' %}" alt="Google">
-            </button>
-        </div>
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="form-help-text">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="form-error">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-checkbox">
+                    <input type="checkbox" name="terms" id="terms" required>
+                    <label for="terms">{% trans 'Li e concordo com os termos de serviços' %}</label>
+                </div>
+                <button type="submit" class="form-button">{% trans "Sign Up" %}</button>
+            </form>
+        {% endif %}
+
+        {% if SOCIALACCOUNT_ENABLED %}
+            <div class="social-login">
+                {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+            </div>
+        {% endif %}
+
+        <p>
+            {% trans "Already have an account?" %}
+            <a href="{{ login_url }}">{% trans "Sign In" %}</a>
+        </p>
     </div>
 {% endblock content %}
 
 {% block extra_head %}
 <style>
+    /* Copiado do template original */
     .body {
         margin: 0;
         font-family: 'Arial', sans-serif;
@@ -81,7 +79,6 @@
         background-color: #ffffff;
         padding: 25px;
         margin-top: 5%;
-        margin-left: 25%;
         border-radius: 12px;
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
         text-align: center;
@@ -102,9 +99,10 @@
         margin-bottom: 20px;
     }
 
-    .form-input {
+    .form-group input,
+    .form-group select {
         width: 100%;
-        padding: 12px 50px;
+        padding: 12px 15px;
         border: 1px solid #ddd;
         border-radius: 8px;
         font-size: 16px;
@@ -112,20 +110,11 @@
         box-sizing: border-box;
     }
 
-    .form-input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
         outline: none;
         border-color: #ffd700;
         box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
-    }
-
-    .form-icon {
-        position: absolute;
-        top: 50%;
-        left: 15px;
-        transform: translateY(-50%);
-        width: 24px;
-        height: 24px;
-        fill: #bbb;
     }
 
     .form-checkbox {
@@ -169,21 +158,15 @@
         margin-top: 20px;
     }
 
-    .social-button {
-        border: none;
-        background: none;
-        cursor: pointer;
-        transition: transform 0.2s;
+    .form-error {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
     }
 
-    .social-button img {
-        width: 35px;
-        height: 35px;
-        transition: opacity 0.3s ease;
-    }
-
-    .social-button:hover img {
-        opacity: 0.8;
+    .form-help-text {
+        font-size: 12px;
+        color: #777;
     }
 
     @keyframes fadeIn {
@@ -194,30 +177,6 @@
         to {
             opacity: 1;
             transform: translateY(0);
-        }
-    }
-
-    @media (max-width: 768px) {
-        .signup-container {
-            padding: 20px;
-        }
-
-        .signup-title {
-            font-size: 20px;
-        }
-
-        .form-input {
-            font-size: 14px;
-        }
-
-        .form-button {
-            font-size: 14px;
-            padding: 10px;
-        }
-
-        .social-button img {
-            width: 30px;
-            height: 30px;
         }
     }
 </style>

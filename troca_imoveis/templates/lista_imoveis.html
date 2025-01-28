@@ -5,94 +5,182 @@
 {% endblock head_title %}
 {% block content %}
 <title>Imóveis</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .navbar {
-            background-color: #fdda00;
-            padding: 10px;
-        }
-        .navbar a {
-            color: black;
-            text-decoration: none;
-        }
-        .property-card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .property-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-        }
-        .property-details {
-            padding: 15px;
-        }
-        .property-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            background-color: #f9f9f9;
-        }
-    </style>
-</head>
-<body>
-    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+    /* CSS anterior */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: black;
+        color: white;
+        margin: 0;
+    }
 
-    <div class="container mt-4">
-        <div class="row">
-            {% for imovel in imoveis %}
-            <div class="col-md-4">
-                <div class="property-card">
-                    <div 
-                        class="property-image" 
-                        style="background-image: url({{ imovel.imagens_set.first.imagem.url }});">
-                    </div>
-                    <div class="property-details">
-                        <h5>{{ imovel.cidade }} - {{ imovel.estado }}</h5>
-                        <p>{{ imovel.tipo_imovel }}</p>
-                        <p>{{ imovel.relacao }}</p>
-                        <p>Valor: R$ {{ imovel.caracteristicas.valor|floatformat:2 }}</p>
-                    </div>
-                    <div class="property-footer">
-                        <button class="btn btn-success btn-like" data-id="{{ imovel.id }}">👍</button>
-                        <button class="btn btn-danger btn-dislike" data-id="{{ imovel.id }}">👎</button>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+    .navbar {
+        background-color: #fdda00;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .navbar h1 {
+        font-size: 18px;
+        margin: 0;
+        color: black;
+    }
+
+    .navbar-icons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .navbar-icons i {
+        color: black;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .property-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .property-card {
+        background-color: #333;
+        border-radius: 10px;
+        overflow: hidden;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .property-card .carousel-inner img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .property-card .details {
+        padding: 15px;
+    }
+
+    .property-card .details h5 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        color: #fdda00;
+    }
+
+    .property-card .actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px;
+        border-top: 1px solid #444;
+    }
+
+    .property-card .actions button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .property-card .actions button:hover {
+        color: #fdda00;
+    }
+
+    .liked {
+        color: #fdda00 !important;
+    }
+</style>
+
+<div class="navbar">
+    <h1>Troca Fácil</h1>
+    <div class="navbar-icons">
+        <i class="bi bi-arrow-left"></i>
+        <i class="bi bi-search"></i>
+        <i class="bi bi-gear"></i>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="container-fluid">
+    <div class="property-grid">
+        {% for imovel in imoveis %}
+        <div class="property-card">
+            {% if imovel.caracteristicas.imagens.all %}
+            <div id="carousel-{{ imovel.id }}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for imagem in imovel.caracteristicas.imagens.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ imagem.imagem.url }}" alt="Imagem do Imóvel">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ imovel.id }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ imovel.id }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Próximo</span>
+                </button>
+            </div>
+            {% else %}
+            <img src="{% static 'placeholder.jpg' %}" alt="Imagem não disponível">
+            {% endif %}
+            <div class="details">
+                <h5>{{ imovel.cidade }} - {{ imovel.estado }}</h5>
+                <p>Tipo: {{ imovel.tipo_imovel }}</p>
+                <p>Relação: {{ imovel.relacao }}</p>
+                <p>Valor: R$ {{ imovel.caracteristicas.valor|floatformat:2 }}</p>
+            </div>
+            <div class="actions">
+                <form action="{% url 'curtir_imovel' imovel.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-like">&#128077;</button>
+                </form>
+                
+                <button class="btn btn-dislike" data-id="{{ imovel.id }}">&#128078;</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+
 <script>
-    $(document).ready(function () {
-        $('.btn-like').click(function () {
-            const imovelId = $(this).data('id');
-            $.get(`/curtir/${imovelId}/`, function (response) {
-                if (response.success) {
-                    alert('Imóvel curtido!');
-                }
-            });
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+        const likeButtons = document.querySelectorAll('.btn-like');
 
-        $('.btn-dislike').click(function () {
-            const imovelId = $(this).data('id');
-            $.get(`/descartar/${imovelId}/`, function (response) {
-                if (response.success) {
-                    alert('Imóvel descartado!');
-                }
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const imovelId = this.getAttribute('data-id');
+
+                fetch(`/curtir-imovel/${imovelId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.classList.toggle('liked');
+                        } else {
+                            alert('Erro ao curtir o imóvel.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                    });
             });
         });
     });
 </script>
 
-
-</body>
-</html>
 {% endblock %}
